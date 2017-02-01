@@ -381,6 +381,12 @@ class ShipStation:
                 data=json.dumps(order.as_dict())
             )
 
+    def add_tag(order_id, tag_id):
+        self.post(
+            endpoint='/orders/addtag',
+            data=json.dumps({"orderId": order_id, "tagId": tag_id})
+        )
+
     def get(self, endpoint=''):
         url = '{}{}'.format(self.url, endpoint)
         r = requests.get(url, auth=(self.key, self.secret))
