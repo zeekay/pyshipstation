@@ -381,7 +381,13 @@ class ShipStation:
                 data=json.dumps(order.as_dict())
             )
 
-    def add_tag(order_id, tag_id):
+    def add_tag(self, order_id=None, tag_id=None):
+        if not tag_id:
+            raise AttributeError('tag_id is required')
+
+        if not order_id:
+            raise AttributeError('order_id is required')
+
         self.post(
             endpoint='/orders/addtag',
             data=json.dumps({"orderId": order_id, "tagId": tag_id})
