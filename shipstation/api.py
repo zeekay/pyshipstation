@@ -366,6 +366,18 @@ class ShipStation:
 
         self.debug = debug
 
+    def _log(self, data):
+        if not self.debug:
+            return
+
+        if hasattr(data, 'json') and callable(data.json):
+            data = data.json()
+
+        try:
+            pprint.PrettyPrinter(indent=4).pprint(data)
+        except:
+            print(data)
+
     def add_order(self, order):
         if type(order) is not ShipStationOrder:
             raise AttributeError('Should be type ShipStationOrder')
@@ -399,9 +411,8 @@ class ShipStation:
     def get(self, endpoint='', **params):
         url = '{}{}'.format(self.url, endpoint)
         r = requests.get(url, auth=(self.key, self.secret), params=params)
-        if self.debug:
-            pprint.PrettyPrinter(indent=4).pprint(r.json())
-        return r.json()
+        self._log(r)
+        return r
 
     def post(self, endpoint='', data=None):
         url = '{}{}'.format(self.url, endpoint)
@@ -412,6 +423,5 @@ class ShipStation:
             data=data,
             headers=headers
         )
-        if self.debug:
-            pprint.PrettyPrinter(indent=4).pprint(r.json())
-        return r.json()
+        self._log(r)
+        return r
