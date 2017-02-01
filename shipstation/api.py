@@ -381,6 +381,9 @@ class ShipStation:
                 data=json.dumps(order.as_dict())
             )
 
+    def list_orders(self, **params):
+        return self.get(endpoint='/orders', **params)
+
     def add_tag(self, order_id=None, tag_id=None):
         if not tag_id:
             raise AttributeError('tag_id is required')
@@ -393,11 +396,12 @@ class ShipStation:
             data=json.dumps({"orderId": order_id, "tagId": tag_id})
         )
 
-    def get(self, endpoint=''):
+    def get(self, endpoint='', **params):
         url = '{}{}'.format(self.url, endpoint)
-        r = requests.get(url, auth=(self.key, self.secret))
+        r = requests.get(url, auth=(self.key, self.secret), params=params)
         if self.debug:
             pprint.PrettyPrinter(indent=4).pprint(r.json())
+        return r.json()
 
     def post(self, endpoint='', data=None):
         url = '{}{}'.format(self.url, endpoint)
@@ -410,3 +414,4 @@ class ShipStation:
         )
         if self.debug:
             pprint.PrettyPrinter(indent=4).pprint(r.json())
+        return r.json()
